@@ -28,9 +28,11 @@ func ParseFile(nameFile string) ([]string, error) {
 
 func GetAndWrite(url string, index int) int {
 	resp, err := http.Get(url)
-	defer resp.Body.Close()
-
-	fmt.Println(resp)
+	defer (func() {
+		if resp != nil {
+			resp.Body.Close()
+		}
+	})()
 
 	if err != nil || resp == nil {
 		fmt.Println("Error while requesting the page %s: %s", url, err.Error())
